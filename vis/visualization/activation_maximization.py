@@ -34,12 +34,12 @@ def visualize_activation_with_losses(input_tensor, losses, wrt_tensor=None,
     """
     # Default optimizer kwargs.
     optimizer_params = utils.add_defaults_to_kwargs({
-        'seed_input': seed_input,
+        'seed_inputs': seed_input,
         'max_iter': 200,
         'verbose': False
     }, **optimizer_params)
 
-    opt = Optimizer(input_tensor, losses, input_range, wrt_tensor=wrt_tensor)
+    opt = Optimizer(input_tensor, losses, input_range, output_tensors=wrt_tensor)
     img = opt.minimize(**optimizer_params)[0]
 
     # If range has integer numbers, cast to 'uint8'
