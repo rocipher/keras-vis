@@ -190,8 +190,7 @@ class Optimizer(object):
             for c in callbacks:
                 c.callback(i, named_losses, overall_loss, grads, wrt_value)
 
-            # Gradient descent update.
-            # It only makes sense to do this if wrt_tensor is input_tensor.
+            # Gradient descent update. It only makes sense to do this if wrt_tensor is input_tensor.
             # Otherwise shapes wont match for the update.
             if self.wrt_tensor_index is not None:
                 step, cache = self._rmsprop(grads, cache)
@@ -218,6 +217,6 @@ class Optimizer(object):
         if self.wrt_tensor_index is None:
             deprocessed_input = None
         else:
-            deprocessed_input = utils.deprocess_input(best_inputs[self.wrt_tensor_index],
+            deprocessed_input = utils.deprocess_input(best_inputs[self.wrt_tensor_index][0],
                                                       self.input_ranges[self.wrt_tensor_index])
         return deprocessed_input, grads, wrt_value
