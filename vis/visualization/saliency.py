@@ -48,7 +48,7 @@ def _find_penultimate_layer(model, layer_idx, penultimate_layer_idx):
 
 
 def visualize_saliency_with_losses(input_tensor, losses, seed_input, wrt_tensor=None,
-                                   grad_modifier='absolute', input_indices=0):
+                                   grad_modifier='absolute', input_index=0):
     """Generates an attention heatmap over the `seed_input` by using positive gradients of `input_tensor`
     with respect to weighted `losses`.
 
@@ -79,23 +79,11 @@ def visualize_saliency_with_losses(input_tensor, losses, seed_input, wrt_tensor=
         But, when `input_indices` is a list of number, returned a list of gradients.
     """
     opt = Optimizer(input_tensor, losses, wrt_tensors=wrt_tensor, norm_grads=False)
-    opt_result = opt.minimize(seed_inputs=seed_input, max_iter=1, grad_modifier=grad_modifier, verbose=False)
+    _, grads, _ = opt.minimize(seed_inputs=seed_input, max_iter=1, grad_modifier=grad_modifier, verbose=False)
 
     channel_idx = 1 if K.image_data_format() == 'channels_first' else -1
-    saliency_maps = []
-    for i in utils.listify(input_indices):
-        if i < len(opt_result):
-            _, grads, _ = opt_result[i]
-            grads = np.max(grads, axis=channel_idx)
-            grads = utils.normalize(grads)[0]
-            saliency_maps.append(grads)
-        else:
-            raise ValueError('# TODO')
-
-    if isinstance(input_indices, list):
-        return saliency_maps
-    else:
-        return saliency_maps[input_indices]
+    grads = np.max(grads, axis=channel_idx)
+    return utils.normalize(grads)[0]
 
 
 def visualize_saliency(model, layer_idx, filter_indices, seed_input, wrt_tensor=None,

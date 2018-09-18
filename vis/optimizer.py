@@ -7,6 +7,8 @@ from .callbacks import Print
 from .grad_modifiers import get
 from .utils import utils
 
+_PRINT_CALLBACK = Print()
+
 
 class Optimizer(object):
 
@@ -87,8 +89,8 @@ class Optimizer(object):
         return step, cache
 
     def _get_seed_inputs(self, seed_inputs):
-        """Creates a random `seed_input` if None. Otherwise:
-            - Ensures batch_size dim on provided `seed_input`.
+        """Creates a random `seed_inputs` if None. Otherwise:
+            - Ensures batch_size dim on provided `seed_inputs`.
             - Shuffle axis according to expected `image_data_format`.
         """
 
@@ -151,11 +153,9 @@ class Optimizer(object):
 
         callbacks = callbacks or []
         if verbose:
-            callbacks.append(Print())
+            callbacks.append(_PRINT_CALLBACK)
 
-        # Make caches as same length as seed_inputs (i.e., input_tensors)
         cache = None
-
         best_loss = float('inf')
         best_inputs = None
 
