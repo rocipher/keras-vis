@@ -85,7 +85,7 @@ def visualize_saliency_with_losses(input_tensor, losses, seed_input, wrt_tensor=
             grads = utils.normalize(grads)[0]
             saliency_maps.append(grads)
         else:
-            raise ValueError('# TODO')
+            raise ValueError('# TODO: i=%d, len(opt_result)=%d' % (i, len(opt_result)))
 
     if not isinstance(input_indices, list):
         return saliency_maps[0]

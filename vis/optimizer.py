@@ -182,7 +182,11 @@ class Optimizer(object):
                     grads[i] = np.reshape(grad, wrt_value.shape)
 
             # Apply grad modifier.
-            grads = grad_modifier(grads)
+            if isinstance(grads, list):
+                for i, grad in enumerate(grads):
+                   grads[i] = grad_modifier(grad)
+            else:
+                grads = grad_modifier(grads)
 
             # Trigger callbacks
             for c in callbacks:
